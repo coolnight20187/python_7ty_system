@@ -1,0 +1,117 @@
+{
+  "name": "7tỷ.vn - Ứng Dụng Nhân Viên",
+  "short_name": "7tỷ.vn Staff",
+  "description": "Ứng dụng quản lý nhân viên cho hệ thống thanh toán hóa đơn điện",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#2d4a2b",
+  "theme_color": "#2d4a2b",
+  "orientation": "portrait",
+  "scope": "/",
+  "lang": "vi",
+  "icons": [
+    {
+      "src": "assets/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["business", "productivity", "finance"],
+  "screenshots": [
+    {
+      "src": "assets/screenshots/dashboard.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Dashboard chính"
+    },
+    {
+      "src": "assets/screenshots/agents.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Quản lý đại lý"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Tạo Đại Lý",
+      "short_name": "Tạo DL",
+      "description": "Tạo đại lý mới",
+      "url": "/?action=create-agent",
+      "icons": [
+        {
+          "src": "assets/icons/agent-icon.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Phê Duyệt",
+      "short_name": "Duyệt",
+      "description": "Xem danh sách phê duyệt",
+      "url": "/?action=approvals",
+      "icons": [
+        {
+          "src": "assets/icons/approve-icon.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Báo Cáo",
+      "short_name": "BC",
+      "description": "Xem báo cáo thống kê",
+      "url": "/?action=reports",
+      "icons": [
+        {
+          "src": "assets/icons/report-icon.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "prefer_related_applications": false,
+  "related_applications": [],
+  "protocol_handlers": [
+    {
+      "protocol": "web+ty7staff",
+      "url": "/?action=%s"
+    }
+  ]
+}

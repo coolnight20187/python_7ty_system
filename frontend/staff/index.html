@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>7tỷ.vn - Ứng Dụng Nhân Viên</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#2d4a2b">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="7tỷ.vn Staff">
+    
+    <!-- Icons -->
+    <link rel="icon" href="assets/icons/favicon.ico">
+    <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png">
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/mobile.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/themes.css">
+    
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <div class="logo-container">
+                <i class="fas fa-bolt"></i>
+                <h2>7tỷ.vn</h2>
+                <p>Staff Portal</p>
+            </div>
+            <div class="loading-spinner"></div>
+            <p>Đang khởi động ứng dụng nhân viên...</p>
+        </div>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="loginScreen" class="screen active">
+        <div class="login-container">
+            <div class="login-header">
+                <div class="logo">
+                    <i class="fas fa-bolt"></i>
+                    <h1>7tỷ.vn</h1>
+                </div>
+                <p class="subtitle">Hệ Thống Quản Lý Nhân Viên</p>
+            </div>
+
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="staffId">Mã Nhân Viên</label>
+                    <div class="input-group">
+                        <i class="fas fa-id-badge"></i>
+                        <input type="text" id="staffId" name="staffId" placeholder="Nhập mã nhân viên" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Mật khẩu</label>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" name="password" placeholder="Nhập mật khẩu" required>
+                        <button type="button" class="toggle-password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="rememberMe" name="rememberMe">
+                        <span class="checkmark"></span>
+                        Ghi nhớ đăng nhập
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-login">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Đăng Nhập
+                </button>
+
+                <div id="loginError" class="error-message" style="display: none;"></div>
+            </form>
+
+            <div class="login-footer">
+                <p>Cần hỗ trợ? Liên hệ IT: <a href="tel:0855409876">085.540.9876</a></p>
+                <p class="version">Phiên bản 2.0.0</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="mainApp" class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <button id="menuToggle" class="menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="logo">
+                    <i class="fas fa-bolt"></i>
+                    <span>7tỷ.vn Staff</span>
+                </div>
+            </div>
+            <div class="header-center">
+                <div class="search-box">
+                    <input type="text" id="globalSearch" placeholder="Tìm kiếm...">
+                    <button type="button" class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="header-right">
+                <button id="notificationBtn" class="notification-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">5</span>
+                </button>
+                <button id="themeToggle" class="theme-btn">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button id="profileBtn" class="profile-btn">
+                    <i class="fas fa-user-circle"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Side Navigation -->
+        <nav id="sideNav" class="side-nav">
+            <div class="nav-header">
+                <div class="staff-info">
+                    <div class="staff-avatar">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <div class="staff-details">
+                        <h3 id="staffName">Nguyễn Văn A</h3>
+                        <p id="staffRole">Nhân Viên</p>
+                        <p id="staffCode">NV001</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-menu">
+                <a href="#" class="nav-item active" data-page="dashboard">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Trang Chủ</span>
+                </a>
+                <a href="#" class="nav-item" data-page="agents">
+                    <i class="fas fa-store"></i>
+                    <span>Quản Lý Đại Lý</span>
+                    <span class="nav-badge">12</span>
+                </a>
+                <a href="#" class="nav-item" data-page="approvals">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Phê Duyệt</span>
+                    <span class="nav-badge">8</span>
+                </a>
+                <a href="#" class="nav-item" data-page="finance">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <span>Tài Chính</span>
+                </a>
+                <a href="#" class="nav-item" data-page="tasks">
+                    <i class="fas fa-tasks"></i>
+                    <span>Công Việc</span>
+                    <span class="nav-badge">3</span>
+                </a>
+                <a href="#" class="nav-item" data-page="reports">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Báo Cáo</span>
+                </a>
+                <a href="#" class="nav-item" data-page="notifications">
+                    <i class="fas fa-bell"></i>
+                    <span>Thông Báo</span>
+                </a>
+                <a href="#" class="nav-item" data-page="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Cài Đặt</span>
+                </a>
+                <div class="nav-divider"></div>
+                <a href="#" class="nav-item" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Đăng Xuất</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Page -->
+            <div id="dashboardPage" class="page active">
+                <div class="page-header">
+                    <h1>Trang Chủ</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" id="quickCreateAgent">
+                            <i class="fas fa-plus"></i> Tạo Đại Lý
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats Overview -->
+                <div class="stats-grid">
+                    <div class="stat-card primary">
+                        <div class="stat-icon">
+                            <i class="fas fa-store"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="totalAgents">0</h3>
+                            <p>Đại Lý Quản Lý</p>
+                            <span class="stat-change positive">+3 tuần này</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card warning">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="pendingApprovals">0</h3>
+                            <p>Chờ Phê Duyệt</p>
+                            <span class="stat-change">Cần xử lý</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card success">
+                        <div class="stat-icon">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="monthlyRevenue">0</h3>
+                            <p>Doanh Thu Tháng</p>
+                            <span class="stat-change positive">+12.5%</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card info">
+                        <div class="stat-icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="activeTasks">0</h3>
+                            <p>Công Việc Đang Làm</p>
+                            <span class="stat-change">3 ưu tiên cao</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <h3>Thao Tác Nhanh</h3>
+                    <div class="action-grid">
+                        <button class="action-btn" data-action="create-agent">
+                            <i class="fas fa-user-plus"></i>
+                            <span>Tạo Đại Lý Mới</span>
+                        </button>
+                        <button class="action-btn" data-action="approve-requests">
+                            <i class="fas fa-check-double"></i>
+                            <span>Phê Duyệt</span>
+                        </button>
+                        <button class="action-btn" data-action="collect-money">
+                            <i class="fas fa-hand-holding-usd"></i>
+                            <span>Thu Tiền</span>
+                        </button>
+                        <button class="action-btn" data-action="view-reports">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Xem Báo Cáo</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Recent Activities & Pending Tasks -->
+                <div class="dashboard-content">
+                    <div class="dashboard-left">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Hoạt Động Gần Đây</h3>
+                                <button class="btn btn-sm btn-secondary">Xem Tất Cả</button>
+                            </div>
+                            <div class="card-content">
+                                <div id="recentActivities" class="activity-list">
+                                    <!-- Activities will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-right">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Công Việc Ưu Tiên</h3>
+                                <span class="badge badge-danger">3</span>
+                            </div>
+                            <div class="card-content">
+                                <div id="priorityTasks" class="task-list">
+                                    <!-- Priority tasks will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Performance Chart -->
+                <div class="chart-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Hiệu Suất Tuần Này</h3>
+                            <div class="chart-controls">
+                                <select id="chartPeriod" class="form-control">
+                                    <option value="week">Tuần này</option>
+                                    <option value="month">Tháng này</option>
+                                    <option value="quarter">Quý này</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <canvas id="performanceChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Agents Management Page -->
+            <div id="agentsPage" class="page">
+                <div class="page-header">
+                    <h1>Quản Lý Đại Lý</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" id="createAgentBtn">
+                            <i class="fas fa-plus"></i> Tạo Đại Lý Mới
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Filters & Search -->
+                <div class="filters-section">
+                    <div class="search-filters">
+                        <div class="search-group">
+                            <input type="text" id="agentSearch" placeholder="Tìm kiếm đại lý..." class="form-control">
+                            <button class="btn btn-secondary">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        <div class="filter-group">
+                            <select id="statusFilter" class="form-control">
+                                <option value="">Tất cả trạng thái</option>
+                                <option value="active">Hoạt động</option>
+                                <option value="pending">Chờ duyệt</option>
+                                <option value="suspended">Tạm khóa</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <select id="sortBy" class="form-control">
+                                <option value="created_desc">Mới nhất</option>
+                                <option value="name_asc">Tên A-Z</option>
+                                <option value="revenue_desc">Doanh thu cao</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Agents List -->
+                <div class="agents-list" id="agentsList">
+                    <!-- Agent cards will be loaded here -->
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination-section">
+                    <div class="pagination-info">
+                        Hiển thị <span id="agentsStart">1</span> - <span id="agentsEnd">10</span> của <span id="agentsTotal">0</span> đại lý
+                    </div>
+                    <div class="pagination-controls">
+                        <button class="btn btn-sm btn-secondary" id="agentsPrevBtn">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <div class="pagination-numbers" id="agentsPagination"></div>
+                        <button class="btn btn-sm btn-secondary" id="agentsNextBtn">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Approvals Page -->
+            <div id="approvalsPage" class="page">
+                <div class="page-header">
+                    <h1>Phê Duyệt</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-success" id="batchApproveBtn">
+                            <i class="fas fa-check-double"></i> Duyệt Hàng Loạt
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Approval Tabs -->
+                <div class="tabs-section">
+                    <div class="tabs-nav">
+                        <button class="tab-btn active" data-tab="agents">Đại Lý Mới (5)</button>
+                        <button class="tab-btn" data-tab="topup">Nạp Tiền (3)</button>
+                        <button class="tab-btn" data-tab="customers">Khách Thẻ (2)</button>
+                        <button class="tab-btn" data-tab="other">Khác (1)</button>
+                    </div>
+
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="agentsTab">
+                            <div class="approval-list" id="agentApprovalsList">
+                                <!-- Agent approvals will be loaded here -->
+                            </div>
+                        </div>
+                        
+                        <div class="tab-pane" id="topupTab">
+                            <div class="approval-list" id="topupApprovalsList">
+                                <!-- Topup approvals will be loaded here -->
+                            </div>
+                        </div>
+                        
+                        <div class="tab-pane" id="customersTab">
+                            <div class="approval-list" id="customerApprovalsList">
+                                <!-- Customer approvals will be loaded here -->
+                            </div>
+                        </div>
+                        
+                        <div class="tab-pane" id="otherTab">
+                            <div class="approval-list" id="otherApprovalsList">
+                                <!-- Other approvals will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Finance Page -->
+            <div id="financePage" class="page">
+                <div class="page-header">
+                    <h1>Quản Lý Tài Chính</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-info" id="exportFinanceBtn">
+                            <i class="fas fa-file-excel"></i> Xuất Báo Cáo
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Financial Stats -->
+                <div class="finance-stats">
+                    <div class="finance-card">
+                        <div class="finance-header">
+                            <h3>Tổng Doanh Thu</h3>
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="finance-amount">
+                            <span id="totalRevenue">0</span>
+                            <small>VND</small>
+                        </div>
+                        <div class="finance-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+15.2% so với tháng trước</span>
+                        </div>
+                    </div>
+
+                    <div class="finance-card">
+                        <div class="finance-header">
+                            <h3>Hoa Hồng Tháng</h3>
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="finance-amount">
+                            <span id="monthlyCommission">0</span>
+                            <small>VND</small>
+                        </div>
+                        <div class="finance-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+8.5% so với tháng trước</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transaction Management -->
+                <div class="transaction-section">
+                    <div class="section-header">
+                        <h3>Giao Dịch Cần Xử Lý</h3>
+                        <div class="section-filters">
+                            <select id="transactionFilter" class="form-control">
+                                <option value="pending">Chờ xử lý</option>
+                                <option value="processing">Đang xử lý</option>
+                                <option value="completed">Hoàn thành</option>
+                                <option value="all">Tất cả</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="transaction-list" id="transactionsList">
+                        <!-- Transactions will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tasks Page -->
+            <div id="tasksPage" class="page">
+                <div class="page-header">
+                    <h1>Quản Lý Công Việc</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" id="createTaskBtn">
+                            <i class="fas fa-plus"></i> Tạo Công Việc
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Task Filters -->
+                <div class="task-filters">
+                    <div class="filter-tabs">
+                        <button class="filter-tab active" data-filter="all">Tất Cả (15)</button>
+                        <button class="filter-tab" data-filter="pending">Chờ Xử Lý (8)</button>
+                        <button class="filter-tab" data-filter="progress">Đang Làm (5)</button>
+                        <button class="filter-tab" data-filter="completed">Hoàn Thành (2)</button>
+                    </div>
+                </div>
+
+                <!-- Kanban Board -->
+                <div class="kanban-board">
+                    <div class="kanban-column">
+                        <div class="column-header">
+                            <h3>Chờ Xử Lý</h3>
+                            <span class="task-count">8</span>
+                        </div>
+                        <div class="task-list" id="pendingTasks">
+                            <!-- Pending tasks will be loaded here -->
+                        </div>
+                    </div>
+
+                    <div class="kanban-column">
+                        <div class="column-header">
+                            <h3>Đang Làm</h3>
+                            <span class="task-count">5</span>
+                        </div>
+                        <div class="task-list" id="inProgressTasks">
+                            <!-- In progress tasks will be loaded here -->
+                        </div>
+                    </div>
+
+                    <div class="kanban-column">
+                        <div class="column-header">
+                            <h3>Hoàn Thành</h3>
+                            <span class="task-count">2</span>
+                        </div>
+                        <div class="task-list" id="completedTasks">
+                            <!-- Completed tasks will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Page -->
+            <div id="reportsPage" class="page">
+                <div class="page-header">
+                    <h1>Báo Cáo & Thống Kê</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-success" id="exportAllReportsBtn">
+                            <i class="fas fa-download"></i> Xuất Tất Cả
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Report Filters -->
+                <div class="report-filters">
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label>Thời gian:</label>
+                            <select id="reportPeriod" class="form-control">
+                                <option value="today">Hôm nay</option>
+                                <option value="week">Tuần này</option>
+                                <option value="month">Tháng này</option>
+                                <option value="quarter">Quý này</option>
+                                <option value="year">Năm này</option>
+                                <option value="custom">Tùy chọn</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Loại báo cáo:</label>
+                            <select id="reportType" class="form-control">
+                                <option value="overview">Tổng quan</option>
+                                <option value="agents">Đại lý</option>
+                                <option value="finance">Tài chính</option>
+                                <option value="performance">Hiệu suất</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" id="generateReportBtn">
+                            <i class="fas fa-chart-bar"></i> Tạo Báo Cáo
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="charts-section">
+                    <div class="chart-row">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3>Doanh Thu Theo Thời Gian</h3>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="revenueChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3>Hiệu Suất Đại Lý</h3>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="agentPerformanceChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-row">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3>Phân Bố Giao Dịch</h3>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="transactionChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3>Tăng Trưởng Hàng Tháng</h3>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="growthChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Page -->
+            <div id="settingsPage" class="page">
+                <div class="page-header">
+                    <h1>Cài Đặt</h1>
+                </div>
+
+                <div class="settings-content">
+                    <div class="settings-section">
+                        <h3>Thông Tin Cá Nhân</h3>
+                        <div class="settings-form">
+                            <div class="form-group">
+                                <label>Họ và tên:</label>
+                                <input type="text" id="settingName" class="form-control" readonly>
+                                <button class="btn btn-sm btn-secondary edit-btn">Sửa</button>
+                            </div>
+                            <div class="form-group">
+                                <label>Email:</label>
+                                <input type="email" id="settingEmail" class="form-control" readonly>
+                                <button class="btn btn-sm btn-secondary edit-btn">Sửa</button>
+                            </div>
+                            <div class="form-group">
+                                <label>Số điện thoại:</label>
+                                <input type="tel" id="settingPhone" class="form-control" readonly>
+                                <button class="btn btn-sm btn-secondary edit-btn">Sửa</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Cài Đặt Ứng Dụng</h3>
+                        <div class="settings-list">
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <span class="setting-label">Chế độ tối:</span>
+                                    <span class="setting-desc">Giao diện tối cho môi trường ít ánh sáng</span>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="switch">
+                                        <input type="checkbox" id="darkModeToggle">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <span class="setting-label">Thông báo push:</span>
+                                    <span class="setting-desc">Nhận thông báo về giao dịch và công việc</span>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="switch">
+                                        <input type="checkbox" id="pushNotifications" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <span class="setting-label">Xác thực sinh trắc học:</span>
+                                    <span class="setting-desc">Sử dụng vân tay hoặc Face ID</span>
+                                </div>
+                                <div class="setting-control">
+                                    <label class="switch">
+                                        <input type="checkbox" id="biometricAuth">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Bảo Mật</h3>
+                        <div class="security-actions">
+                            <button class="btn btn-warning btn-block">
+                                <i class="fas fa-key"></i> Đổi Mật Khẩu
+                            </button>
+                            <button class="btn btn-info btn-block">
+                                <i class="fas fa-shield-alt"></i> Cài Đặt Xác Thực 2 Bước
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Thông Tin Ứng Dụng</h3>
+                        <div class="app-info">
+                            <p><strong>Phiên bản:</strong> 2.0.0</p>
+                            <p><strong>Cập nhật:</strong> 27/01/2025</p>
+                            <p><strong>Nhà phát triển:</strong> 7tỷ.vn Team</p>
+                            <p><strong>Hỗ trợ:</strong> support@7ty.vn</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Bottom Navigation (Mobile) -->
+        <nav class="bottom-nav">
+            <button class="nav-btn active" data-page="dashboard">
+                <i class="fas fa-home"></i>
+                <span>Trang Chủ</span>
+            </button>
+            <button class="nav-btn" data-page="agents">
+                <i class="fas fa-store"></i>
+                <span>Đại Lý</span>
+            </button>
+            <button class="nav-btn" data-page="approvals">
+                <i class="fas fa-check-circle"></i>
+                <span>Duyệt</span>
+                <span class="nav-badge">8</span>
+            </button>
+            <button class="nav-btn" data-page="tasks">
+                <i class="fas fa-tasks"></i>
+                <span>Việc</span>
+            </button>
+            <button class="nav-btn" data-page="reports">
+                <i class="fas fa-chart-bar"></i>
+                <span>Báo Cáo</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Modals -->
+    <!-- Create Agent Modal -->
+    <div id="createAgentModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3>Tạo Đại Lý Mới</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="createAgentForm" class="multi-step-form">
+                    <!-- Step 1: Basic Info -->
+                    <div class="form-step active" data-step="1">
+                        <h4>Thông Tin Cơ Bản</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="agentName">Họ và tên *</label>
+                                <input type="text" id="agentName" name="agentName" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="agentPhone">Số điện thoại *</label>
+                                <input type="tel" id="agentPhone" name="agentPhone" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="agentEmail">Email</label>
+                                <input type="email" id="agentEmail" name="agentEmail" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="agentIdNumber">Số CCCD/CMND *</label>
+                                <input type="text" id="agentIdNumber" name="agentIdNumber" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="agentAddress">Địa chỉ *</label>
+                            <textarea id="agentAddress" name="agentAddress" class="form-control" rows="3" required></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Business Info -->
+                    <div class="form-step" data-step="2">
+                        <h4>Thông Tin Kinh Doanh</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="businessName">Tên cửa hàng</label>
+                                <input type="text" id="businessName" name="businessName" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="businessAddress">Địa chỉ kinh doanh</label>
+                                <input type="text" id="businessAddress" name="businessAddress" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="commissionRate">Tỷ lệ hoa hồng (%)</label>
+                                <input type="number" id="commissionRate" name="commissionRate" class="form-control" min="0" max="100" step="0.01" value="1.0">
+                            </div>
+                            <div class="form-group">
+                                <label for="creditLimit">Hạn mức tín dụng (VND)</label>
+                                <input type="number" id="creditLimit" name="creditLimit" class="form-control" min="0" value="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Documents -->
+                    <div class="form-step" data-step="3">
+                        <h4>Tài Liệu</h4>
+                        <div class="upload-section">
+                            <div class="upload-group">
+                                <label>Ảnh CCCD mặt trước *</label>
+                                <div class="file-upload">
+                                    <input type="file" id="idFrontImage" name="idFrontImage" accept="image/*" required>
+                                    <div class="upload-placeholder">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <p>Chọn ảnh hoặc kéo thả vào đây</p>
+                                    </div>
+                                    <div class="image-preview" style="display: none;">
+                                        <img src="" alt="Preview">
+                                        <button type="button" class="remove-image">&times;</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="upload-group">
+                                <label>Ảnh CCCD mặt sau *</label>
+                                <div class="file-upload">
+                                    <input type="file" id="idBackImage" name="idBackImage" accept="image/*" required>
+                                    <div class="upload-placeholder">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <p>Chọn ảnh hoặc kéo thả vào đây</p>
+                                    </div>
+                                    <div class="image-preview" style="display: none;">
+                                        <img src="" alt="Preview">
+                                        <button type="button" class="remove-image">&times;</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Navigation -->
+                    <div class="form-navigation">
+                        <button type="button" class="btn btn-secondary" id="prevStepBtn" style="display: none;">
+                            <i class="fas fa-chevron-left"></i> Quay Lại
+                        </button>
+                        <div class="step-indicators">
+                            <span class="step-dot active" data-step="1"></span>
+                            <span class="step-dot" data-step="2"></span>
+                            <span class="step-dot" data-step="3"></span>
+                        </div>
+                        <button type="button" class="btn btn-primary" id="nextStepBtn">
+                            Tiếp Theo <i class="fas fa-chevron-right"></i>
+                        </button>
+                        <button type="submit" class="btn btn-success" id="submitAgentBtn" style="display: none;">
+                            <i class="fas fa-check"></i> Tạo Đại Lý
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Approval Detail Modal -->
+    <div id="approvalDetailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="approvalTitle">Chi Tiết Phê Duyệt</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="approvalDetails">
+                    <!-- Approval details will be loaded here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success" id="approveBtn">
+                    <i class="fas fa-check"></i> Phê Duyệt
+                </button>
+                <button class="btn btn-danger" id="rejectBtn">
+                    <i class="fas fa-times"></i> Từ Chối
+                </button>
+                <button class="btn btn-secondary" id="closeApprovalBtn">
+                    <i class="fas fa-times"></i> Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Overlay -->
+    <div id="overlay" class="overlay"></div>
+
+    <!-- Scripts -->
+    <script src="components/modals.js"></script>
+    <script src="components/forms.js"></script>
+    <script src="components/charts.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/agents.js"></script>
+    <script src="js/finance.js"></script>
+    <script src="js/tasks.js"></script>
+    <script src="js/reports.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/api.js"></script>
+
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(registrationError => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+{
+  "name": "7tỷ.vn - Ứng Dụng Khách Thẻ",
+  "short_name": "7tỷ.vn Customer",
+  "description": "Ứng dụng di động cho khách thẻ tín dụng - Quản lý ví, lấy đơn điện, rút tiền",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#2d4a2b",
+  "theme_color": "#2d4a2b",
+  "orientation": "portrait",
+  "scope": "/",
+  "lang": "vi",
+  "icons": [
+    {
+      "src": "assets/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["finance", "lifestyle", "utilities"],
+  "screenshots": [
+    {
+      "src": "assets/screenshots/welcome.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Màn hình chào mừng"
+    },
+    {
+      "src": "assets/screenshots/dashboard.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Trang chủ"
+    },
+    {
+      "src": "assets/screenshots/wallet.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Ví điện tử"
+    },
+    {
+      "src": "assets/screenshots/bills.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Hóa đơn điện"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Rút Tiền",
+      "short_name": "Rút",
+      "description": "Rút tiền về tài khoản ngân hàng",
+      "url": "/?action=withdraw",
+      "icons": [
+        {
+          "src": "assets/icons/withdraw-icon.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Tìm Hóa Đơn",
+      "short_name": "Tìm",
+      "description": "Tìm kiếm hóa đơn điện",
+      "url": "/?action=search-bills",
+      "icons": [
+        {
+          "src": "assets/icons/search-icon.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Chụp Biên Nhận",
+      "short_name": "Chụp",
+      "description": "Chụp ảnh biên nhận",
+      "url": "/?action=capture-receipt",
+      "icons": [
+        {
+          "src": "assets/icons/camera-icon.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "prefer_related_applications": false,
+  "related_applications": [],
+  "protocol_handlers": [
+    {
+      "protocol": "web+ty7customer",
+      "url": "/?action=%s"
+    }
+  ],
+  "share_target": {
+    "action": "/share-receipt",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
+        {
+          "name": "receipt",
+          "accept": ["image/*"]
+        }
+      ]
+    }
+  },
+  "file_handlers": [
+    {
+      "action": "/handle-receipt",
+      "accept": {
+        "image/*": [".jpg", ".jpeg", ".png", ".gif", ".webp"]
+      }
+    }
+  ]
+}

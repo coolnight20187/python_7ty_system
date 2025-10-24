@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>7tỷ.vn - Ứng Dụng Khách Thẻ</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#2d4a2b">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="7tỷ.vn Customer">
+    
+    <!-- Icons -->
+    <link rel="icon" href="assets/icons/favicon.ico">
+    <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png">
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/mobile.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/themes.css">
+    
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <div class="logo-container">
+                <i class="fas fa-bolt"></i>
+                <h2>7tỷ.vn</h2>
+                <p>Khách Thẻ</p>
+            </div>
+            <div class="loading-spinner"></div>
+            <p>Đang khởi động ứng dụng...</p>
+        </div>
+    </div>
+
+    <!-- Welcome Screen -->
+    <div id="welcomeScreen" class="screen active">
+        <div class="welcome-container">
+            <div class="welcome-header">
+                <div class="logo">
+                    <i class="fas fa-bolt"></i>
+                    <h1>7tỷ.vn</h1>
+                </div>
+                <p class="subtitle">Ứng Dụng Khách Thẻ Tín Dụng</p>
+                <p class="description">Quản lý ví điện tử, thanh toán hóa đơn điện và rút tiền dễ dàng</p>
+            </div>
+
+            <div class="welcome-features">
+                <div class="feature-item">
+                    <i class="fas fa-wallet"></i>
+                    <h3>Quản Lý Ví</h3>
+                    <p>Theo dõi số dư và lịch sử giao dịch</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <h3>Lấy Đơn Điện</h3>
+                    <p>Tìm kiếm và lấy hóa đơn điện từ kho</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <h3>Rút Tiền</h3>
+                    <p>Rút tiền về tài khoản ngân hàng</p>
+                </div>
+            </div>
+
+            <div class="welcome-actions">
+                <button class="btn btn-primary btn-large" id="loginBtn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Đăng Nhập
+                </button>
+                <button class="btn btn-secondary btn-large" id="registerBtn">
+                    <i class="fas fa-user-plus"></i>
+                    Đăng Ký Tài Khoản
+                </button>
+            </div>
+
+            <div class="welcome-footer">
+                <p>Cần hỗ trợ? Gọi <a href="tel:0855409876">085.540.9876</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="loginScreen" class="screen">
+        <div class="auth-container">
+            <div class="auth-header">
+                <button class="back-btn" id="backToWelcome">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <div class="logo">
+                    <i class="fas fa-bolt"></i>
+                    <h2>Đăng Nhập</h2>
+                </div>
+            </div>
+
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="loginPhone">Số điện thoại</label>
+                    <div class="input-group">
+                        <i class="fas fa-phone"></i>
+                        <input type="tel" id="loginPhone" name="loginPhone" placeholder="Nhập số điện thoại" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="loginPassword">Mật khẩu</label>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="loginPassword" name="loginPassword" placeholder="Nhập mật khẩu" required>
+                        <button type="button" class="toggle-password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-options">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="rememberMe" name="rememberMe">
+                        <span class="checkmark"></span>
+                        Ghi nhớ đăng nhập
+                    </label>
+                    <a href="#" class="forgot-password" id="forgotPasswordLink">Quên mật khẩu?</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-login">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Đăng Nhập
+                </button>
+
+                <!-- Biometric Login -->
+                <div class="biometric-section" id="biometricSection" style="display: none;">
+                    <div class="divider">
+                        <span>hoặc</span>
+                    </div>
+                    <button type="button" class="btn btn-secondary btn-biometric" id="biometricLoginBtn">
+                        <i class="fas fa-fingerprint"></i>
+                        Đăng nhập bằng sinh trắc học
+                    </button>
+                </div>
+
+                <div id="loginError" class="error-message" style="display: none;"></div>
+            </form>
+
+            <div class="auth-footer">
+                <p>Chưa có tài khoản? <a href="#" id="goToRegister">Đăng ký ngay</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Registration Screen -->
+    <div id="registerScreen" class="screen">
+        <div class="auth-container">
+            <div class="auth-header">
+                <button class="back-btn" id="backToWelcomeFromRegister">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <div class="logo">
+                    <i class="fas fa-bolt"></i>
+                    <h2>Đăng Ký</h2>
+                </div>
+            </div>
+
+            <form id="registerForm" class="auth-form multi-step-form">
+                <!-- Step 1: Basic Info -->
+                <div class="form-step active" data-step="1">
+                    <h3>Thông Tin Cơ Bản</h3>
+                    <div class="form-group">
+                        <label for="fullName">Họ và tên *</label>
+                        <div class="input-group">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="fullName" name="fullName" placeholder="Nhập họ và tên" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phoneNumber">Số điện thoại *</label>
+                        <div class="input-group">
+                            <i class="fas fa-phone"></i>
+                            <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="Nhập số điện thoại" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <div class="input-group">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="email" name="email" placeholder="Nhập địa chỉ email">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Mật khẩu *</label>
+                        <div class="input-group">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="password" name="password" placeholder="Tạo mật khẩu" required>
+                            <button type="button" class="toggle-password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="password-strength">
+                            <div class="strength-bar">
+                                <div class="strength-fill"></div>
+                            </div>
+                            <span class="strength-text">Độ mạnh mật khẩu</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmPassword">Xác nhận mật khẩu *</label>
+                        <div class="input-group">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Nhập lại mật khẩu" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Personal Info -->
+                <div class="form-step" data-step="2">
+                    <h3>Thông Tin Cá Nhân</h3>
+                    <div class="form-group">
+                        <label for="idNumber">Số CCCD/CMND *</label>
+                        <div class="input-group">
+                            <i class="fas fa-id-card"></i>
+                            <input type="text" id="idNumber" name="idNumber" placeholder="Nhập số CCCD/CMND" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address">Địa chỉ *</label>
+                        <div class="input-group">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <textarea id="address" name="address" placeholder="Nhập địa chỉ đầy đủ" rows="3" required></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dateOfBirth">Ngày sinh</label>
+                        <div class="input-group">
+                            <i class="fas fa-calendar"></i>
+                            <input type="date" id="dateOfBirth" name="dateOfBirth">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gender">Giới tính</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="gender" value="male">
+                                <span class="radio-mark"></span>
+                                Nam
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="gender" value="female">
+                                <span class="radio-mark"></span>
+                                Nữ
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="gender" value="other">
+                                <span class="radio-mark"></span>
+                                Khác
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Bank Info -->
+                <div class="form-step" data-step="3">
+                    <h3>Thông Tin Ngân Hàng</h3>
+                    <div class="form-group">
+                        <label for="bankName">Tên ngân hàng *</label>
+                        <div class="input-group">
+                            <i class="fas fa-university"></i>
+                            <select id="bankName" name="bankName" required>
+                                <option value="">Chọn ngân hàng</option>
+                                <option value="vietcombank">Vietcombank</option>
+                                <option value="techcombank">Techcombank</option>
+                                <option value="bidv">BIDV</option>
+                                <option value="vietinbank">VietinBank</option>
+                                <option value="acb">ACB</option>
+                                <option value="mb">MB Bank</option>
+                                <option value="tpbank">TPBank</option>
+                                <option value="sacombank">Sacombank</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="accountNumber">Số tài khoản *</label>
+                        <div class="input-group">
+                            <i class="fas fa-credit-card"></i>
+                            <input type="text" id="accountNumber" name="accountNumber" placeholder="Nhập số tài khoản" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="accountHolder">Chủ tài khoản *</label>
+                        <div class="input-group">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="accountHolder" name="accountHolder" placeholder="Tên chủ tài khoản" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="branch">Chi nhánh</label>
+                        <div class="input-group">
+                            <i class="fas fa-building"></i>
+                            <input type="text" id="branch" name="branch" placeholder="Tên chi nhánh">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4: Documents -->
+                <div class="form-step" data-step="4">
+                    <h3>Tài Liệu</h3>
+                    <p class="step-description">Vui lòng chụp ảnh CCCD/CMND để xác thực danh tính</p>
+                    
+                    <div class="upload-section">
+                        <div class="upload-group">
+                            <label>Ảnh CCCD mặt trước *</label>
+                            <div class="camera-upload">
+                                <input type="file" id="idFrontImage" name="idFrontImage" accept="image/*" capture="environment" required>
+                                <div class="upload-area" id="frontUploadArea">
+                                    <i class="fas fa-camera"></i>
+                                    <p>Chụp ảnh CCCD mặt trước</p>
+                                    <button type="button" class="btn btn-secondary btn-sm">Chọn từ thư viện</button>
+                                </div>
+                                <div class="image-preview" id="frontPreview" style="display: none;">
+                                    <img src="" alt="CCCD mặt trước">
+                                    <div class="preview-actions">
+                                        <button type="button" class="btn btn-sm btn-secondary retake-btn">Chụp lại</button>
+                                        <button type="button" class="btn btn-sm btn-danger remove-btn">Xóa</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="upload-group">
+                            <label>Ảnh CCCD mặt sau *</label>
+                            <div class="camera-upload">
+                                <input type="file" id="idBackImage" name="idBackImage" accept="image/*" capture="environment" required>
+                                <div class="upload-area" id="backUploadArea">
+                                    <i class="fas fa-camera"></i>
+                                    <p>Chụp ảnh CCCD mặt sau</p>
+                                    <button type="button" class="btn btn-secondary btn-sm">Chọn từ thư viện</button>
+                                </div>
+                                <div class="image-preview" id="backPreview" style="display: none;">
+                                    <img src="" alt="CCCD mặt sau">
+                                    <div class="preview-actions">
+                                        <button type="button" class="btn btn-sm btn-secondary retake-btn">Chụp lại</button>
+                                        <button type="button" class="btn btn-sm btn-danger remove-btn">Xóa</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="upload-tips">
+                        <h4>Lưu ý khi chụp ảnh:</h4>
+                        <ul>
+                            <li>Đảm bảo ánh sáng đủ sáng</li>
+                            <li>Ảnh rõ nét, không bị mờ</li>
+                            <li>Chụp toàn bộ thẻ, không bị cắt</li>
+                            <li>Tránh phản chiếu ánh sáng</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Step 5: OTP Verification -->
+                <div class="form-step" data-step="5">
+                    <h3>Xác Thực OTP</h3>
+                    <p class="step-description">Mã OTP đã được gửi đến số điện thoại <span id="otpPhoneNumber"></span></p>
+                    
+                    <div class="otp-section">
+                        <div class="otp-input-group">
+                            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]">
+                            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]">
+                            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]">
+                            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]">
+                            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]">
+                            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]">
+                        </div>
+                        
+                        <div class="otp-timer">
+                            <p>Mã OTP có hiệu lực trong <span id="otpTimer">60</span> giây</p>
+                        </div>
+                        
+                        <div class="otp-actions">
+                            <button type="button" class="btn btn-secondary" id="resendOtpBtn" disabled>
+                                <i class="fas fa-redo"></i>
+                                Gửi lại mã
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Navigation -->
+                <div class="form-navigation">
+                    <button type="button" class="btn btn-secondary" id="prevStepBtn" style="display: none;">
+                        <i class="fas fa-chevron-left"></i> Quay Lại
+                    </button>
+                    <div class="step-indicators">
+                        <span class="step-dot active" data-step="1">1</span>
+                        <span class="step-dot" data-step="2">2</span>
+                        <span class="step-dot" data-step="3">3</span>
+                        <span class="step-dot" data-step="4">4</span>
+                        <span class="step-dot" data-step="5">5</span>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="nextStepBtn">
+                        Tiếp Theo <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <button type="submit" class="btn btn-success" id="submitRegisterBtn" style="display: none;">
+                        <i class="fas fa-check"></i> Hoàn Thành
+                    </button>
+                </div>
+
+                <div id="registerError" class="error-message" style="display: none;"></div>
+            </form>
+
+            <div class="auth-footer">
+                <p>Đã có tài khoản? <a href="#" id="goToLogin">Đăng nhập</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="mainApp" class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <button id="menuToggle" class="menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="logo">
+                    <i class="fas fa-bolt"></i>
+                    <span>7tỷ.vn</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <button id="notificationBtn" class="notification-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">2</span>
+                </button>
+                <button id="profileBtn" class="profile-btn">
+                    <i class="fas fa-user-circle"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Side Navigation -->
+        <nav id="sideNav" class="side-nav">
+            <div class="nav-header">
+                <div class="customer-info">
+                    <div class="customer-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="customer-details">
+                        <h3 id="customerName">Nguyễn Văn A</h3>
+                        <p id="customerPhone">0901234567</p>
+                        <div class="customer-status">
+                            <span class="status-badge verified">Đã xác thực</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-menu">
+                <a href="#" class="nav-item active" data-page="dashboard">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Trang Chủ</span>
+                </a>
+                <a href="#" class="nav-item" data-page="wallet">
+                    <i class="fas fa-wallet"></i>
+                    <span>Ví Điện Tử</span>
+                </a>
+                <a href="#" class="nav-item" data-page="bills">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <span>Hóa Đơn Điện</span>
+                </a>
+                <a href="#" class="nav-item" data-page="receipts">
+                    <i class="fas fa-receipt"></i>
+                    <span>Biên Nhận</span>
+                    <span class="nav-badge">3</span>
+                </a>
+                <a href="#" class="nav-item" data-page="history">
+                    <i class="fas fa-history"></i>
+                    <span>Lịch Sử</span>
+                </a>
+                <a href="#" class="nav-item" data-page="profile">
+                    <i class="fas fa-user-cog"></i>
+                    <span>Hồ Sơ</span>
+                </a>
+                <a href="#" class="nav-item" data-page="help">
+                    <i class="fas fa-question-circle"></i>
+                    <span>Trợ Giúp</span>
+                </a>
+                <div class="nav-divider"></div>
+                <a href="#" class="nav-item" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Đăng Xuất</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Page -->
+            <div id="dashboardPage" class="page active">
+                <div class="page-header">
+                    <h1>Trang Chủ</h1>
+                    <button class="refresh-btn">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+
+                <!-- Wallet Summary -->
+                <div class="wallet-summary">
+                    <div class="balance-card">
+                        <div class="balance-header">
+                            <h3>Số Dư Ví</h3>
+                            <button class="eye-btn" id="toggleBalance">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="balance-amount">
+                            <span id="walletBalance" class="balance-visible">2,500,000</span>
+                            <span id="walletBalanceHidden" class="balance-hidden" style="display: none;">••••••</span>
+                            <small>VND</small>
+                        </div>
+                        <div class="balance-info">
+                            <div class="info-item">
+                                <span class="label">Hạn mức:</span>
+                                <span class="value" id="creditLimit">10,000,000 VND</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Khả dụng:</span>
+                                <span class="value" id="availableCredit">7,500,000 VND</span>
+                            </div>
+                        </div>
+                        <div class="balance-actions">
+                            <button class="btn btn-primary btn-sm" id="withdrawBtn">
+                                <i class="fas fa-money-bill-wave"></i> Rút Tiền
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <h3>Thao Tác Nhanh</h3>
+                    <div class="action-grid">
+                        <button class="action-btn" data-action="browse-bills">
+                            <i class="fas fa-search"></i>
+                            <span>Tìm Hóa Đơn</span>
+                        </button>
+                        <button class="action-btn" data-action="upload-receipt">
+                            <i class="fas fa-camera"></i>
+                            <span>Chụp Biên Nhận</span>
+                        </button>
+                        <button class="action-btn" data-action="withdraw-money">
+                            <i class="fas fa-hand-holding-usd"></i>
+                            <span>Rút Tiền</span>
+                        </button>
+                        <button class="action-btn" data-action="view-history">
+                            <i class="fas fa-list"></i>
+                            <span>Lịch Sử</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Recent Activities -->
+                <div class="recent-section">
+                    <div class="section-header">
+                        <h3>Hoạt Động Gần Đây</h3>
+                        <a href="#" class="view-all-link">Xem tất cả</a>
+                    </div>
+                    <div id="recentActivities" class="activity-list">
+                        <!-- Activities will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Statistics -->
+                <div class="stats-section">
+                    <h3>Thống Kê Tháng Này</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-icon">
+                                <i class="fas fa-file-invoice"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h4 id="monthlyBills">15</h4>
+                                <p>Hóa Đơn Đã Lấy</p>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h4 id="monthlyWithdrawals">3</h4>
+                                <p>Lần Rút Tiền</p>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">
+                                <i class="fas fa-receipt"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h4 id="monthlyReceipts">12</h4>
+                                <p>Biên Nhận Tải Lên</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wallet Page -->
+            <div id="walletPage" class="page">
+                <div class="page-header">
+                    <h1>Ví Điện Tử</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" id="withdrawWalletBtn">
+                            <i class="fas fa-money-bill-wave"></i> Rút Tiền
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Wallet Overview -->
+                <div class="wallet-overview">
+                    <div class="balance-display">
+                        <h2>Số Dư Hiện Tại</h2>
+                        <div class="balance-amount large">
+                            <span id="currentBalance">2,500,000</span>
+                            <small>VND</small>
+                        </div>
+                    </div>
+
+                    <div class="wallet-stats">
+                        <div class="stat-row">
+                            <span class="stat-label">Hạn mức tín dụng:</span>
+                            <span class="stat-value" id="totalCreditLimit">10,000,000 VND</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Số tiền khả dụng:</span>
+                            <span class="stat-value" id="availableAmount">7,500,000 VND</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Tổng đã rút tháng này:</span>
+                            <span class="stat-value" id="monthlyWithdrawn">1,200,000 VND</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bank Accounts -->
+                <div class="bank-accounts-section">
+                    <div class="section-header">
+                        <h3>Tài Khoản Ngân Hàng</h3>
+                        <button class="btn btn-secondary btn-sm" id="addBankBtn">
+                            <i class="fas fa-plus"></i> Thêm
+                        </button>
+                    </div>
+                    <div id="bankAccountsList" class="bank-accounts-list">
+                        <!-- Bank accounts will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Transaction History -->
+                <div class="transaction-section">
+                    <div class="section-header">
+                        <h3>Lịch Sử Giao Dịch</h3>
+                        <div class="filter-controls">
+                            <select id="transactionFilter" class="form-control">
+                                <option value="all">Tất cả</option>
+                                <option value="withdraw">Rút tiền</option>
+                                <option value="deposit">Nạp tiền</option>
+                                <option value="payment">Thanh toán</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="transactionsList" class="transactions-list">
+                        <!-- Transactions will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bills Page -->
+            <div id="billsPage" class="page">
+                <div class="page-header">
+                    <h1>Hóa Đơn Điện</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" id="searchBillsBtn">
+                            <i class="fas fa-search"></i> Tìm Kiếm
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Search Section -->
+                <div class="search-section">
+                    <div class="search-tabs">
+                        <button class="search-tab active" data-tab="browse">Duyệt Kho</button>
+                        <button class="search-tab" data-tab="search">Tìm Kiếm</button>
+                        <button class="search-tab" data-tab="collected">Đã Lấy</button>
+                    </div>
+
+                    <div class="tab-content">
+                        <!-- Browse Tab -->
+                        <div class="tab-pane active" id="browseTab">
+                            <div class="filters-section">
+                                <div class="filter-row">
+                                    <div class="filter-group">
+                                        <label>Khu vực:</label>
+                                        <select id="areaFilter" class="form-control">
+                                            <option value="">Tất cả khu vực</option>
+                                            <option value="hanoi">Hà Nội</option>
+                                            <option value="hcm">TP.HCM</option>
+                                            <option value="danang">Đà Nẵng</option>
+                                        </select>
+                                    </div>
+                                    <div class="filter-group">
+                                        <label>Mệnh giá:</label>
+                                        <div class="price-range">
+                                            <input type="number" id="minPrice" placeholder="Từ" class="form-control">
+                                            <span>-</span>
+                                            <input type="number" id="maxPrice" placeholder="Đến" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="filter-actions">
+                                    <button class="btn btn-primary" id="applyFiltersBtn">
+                                        <i class="fas fa-filter"></i> Áp Dụng
+                                    </button>
+                                    <button class="btn btn-secondary" id="clearFiltersBtn">
+                                        <i class="fas fa-times"></i> Xóa Bộ Lọc
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div id="billsList" class="bills-list">
+                                <!-- Bills will be loaded here -->
+                            </div>
+                        </div>
+
+                        <!-- Search Tab -->
+                        <div class="tab-pane" id="searchTab">
+                            <div class="search-form">
+                                <div class="form-group">
+                                    <label>Tìm kiếm theo:</label>
+                                    <div class="search-options">
+                                        <label class="radio-label">
+                                            <input type="radio" name="searchType" value="code" checked>
+                                            <span class="radio-mark"></span>
+                                            Mã khách hàng
+                                        </label>
+                                        <label class="radio-label">
+                                            <input type="radio" name="searchType" value="address">
+                                            <span class="radio-mark"></span>
+                                            Địa chỉ
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <input type="text" id="searchInput" class="form-control" placeholder="Nhập từ khóa tìm kiếm">
+                                        <button class="btn btn-primary" id="performSearchBtn">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="searchResults" class="search-results">
+                                <!-- Search results will be displayed here -->
+                            </div>
+                        </div>
+
+                        <!-- Collected Tab -->
+                        <div class="tab-pane" id="collectedTab">
+                            <div id="collectedBills" class="collected-bills">
+                                <!-- Collected bills will be displayed here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Receipts Page -->
+            <div id="receiptsPage" class="page">
+                <div class="page-header">
+                    <h1>Quản Lý Biên Nhận</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" id="uploadReceiptBtn">
+                            <i class="fas fa-camera"></i> Chụp Biên Nhận
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Upload Section -->
+                <div class="upload-section">
+                    <div class="upload-stats">
+                        <div class="stat-card">
+                            <div class="stat-icon pending">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="pendingReceipts">3</h3>
+                                <p>Chờ Duyệt</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon approved">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="approvedReceipts">12</h3>
+                                <p>Đã Duyệt</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon rejected">
+                                <i class="fas fa-times"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="rejectedReceipts">1</h3>
+                                <p>Bị Từ Chối</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Receipts List -->
+                <div class="receipts-section">
+                    <div class="receipts-filters">
+                        <div class="filter-tabs">
+                            <button class="filter-tab active" data-status="all">Tất Cả</button>
+                            <button class="filter-tab" data-status="pending">Chờ Duyệt</button>
+                            <button class="filter-tab" data-status="approved">Đã Duyệt</button>
+                            <button class="filter-tab" data-status="rejected">Bị Từ Chối</button>
+                        </div>
+                    </div>
+
+                    <div id="receiptsList" class="receipts-list">
+                        <!-- Receipts will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Page -->
+            <div id="profilePage" class="page">
+                <div class="page-header">
+                    <h1>Hồ Sơ Cá Nhân</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" id="editProfileBtn">
+                            <i class="fas fa-edit"></i> Chỉnh Sửa
+                        </button>
+                    </div>
+                </div>
+
+                <div class="profile-content">
+                    <!-- Profile Info -->
+                    <div class="profile-section">
+                        <h3>Thông Tin Cá Nhân</h3>
+                        <div class="profile-avatar-section">
+                            <div class="avatar-container">
+                                <img id="profileAvatar" src="assets/images/default-avatar.png" alt="Avatar">
+                                <button class="avatar-edit-btn">
+                                    <i class="fas fa-camera"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="profile-info">
+                            <div class="info-row">
+                                <span class="label">Họ và tên:</span>
+                                <span class="value" id="profileName">Nguyễn Văn A</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">Số điện thoại:</span>
+                                <span class="value" id="profilePhone">0901234567</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">Email:</span>
+                                <span class="value" id="profileEmail">nguyenvana@email.com</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">Số CCCD:</span>
+                                <span class="value" id="profileIdNumber">123456789012</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">Địa chỉ:</span>
+                                <span class="value" id="profileAddress">123 Đường ABC, Quận XYZ, TP.HCM</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">Trạng thái:</span>
+                                <span class="value">
+                                    <span class="status-badge verified">Đã xác thực</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Security Settings -->
+                    <div class="profile-section">
+                        <h3>Bảo Mật</h3>
+                        <div class="security-settings">
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <span class="setting-label">Đổi mật khẩu</span>
+                                    <span class="setting-desc">Cập nhật mật khẩu đăng nhập</span>
+                                </div>
+                                <button class="btn btn-secondary btn-sm">Đổi</button>
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <span class="setting-label">Xác thực sinh trắc học</span>
+                                    <span class="setting-desc">Đăng nhập bằng vân tay hoặc khuôn mặt</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="biometricToggle">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- App Settings -->
+                    <div class="profile-section">
+                        <h3>Cài Đặt Ứng Dụng</h3>
+                        <div class="app-settings">
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <span class="setting-label">Thông báo push</span>
+                                    <span class="setting-desc">Nhận thông báo về giao dịch và cập nhật</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="pushNotifications" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <span class="setting-label">Chế độ tối</span>
+                                    <span class="setting-desc">Giao diện tối cho môi trường ít ánh sáng</span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="darkModeToggle">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <button class="nav-btn active" data-page="dashboard">
+                <i class="fas fa-home"></i>
+                <span>Trang Chủ</span>
+            </button>
+            <button class="nav-btn" data-page="wallet">
+                <i class="fas fa-wallet"></i>
+                <span>Ví</span>
+            </button>
+            <button class="nav-btn" data-page="bills">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <span>Hóa Đơn</span>
+            </button>
+            <button class="nav-btn" data-page="receipts">
+                <i class="fas fa-receipt"></i>
+                <span>Biên Nhận</span>
+                <span class="nav-badge">3</span>
+            </button>
+            <button class="nav-btn" data-page="profile">
+                <i class="fas fa-user"></i>
+                <span>Hồ Sơ</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Modals -->
+    <!-- Camera Modal -->
+    <div id="cameraModal" class="modal">
+        <div class="modal-content camera-modal">
+            <div class="modal-header">
+                <h3>Chụp Biên Nhận</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="camera-container">
+                    <video id="cameraVideo" class="camera-video" autoplay playsinline></video>
+                    <canvas id="cameraCanvas" class="camera-canvas" style="display: none;"></canvas>
+                    <div class="camera-overlay">
+                        <div class="camera-frame"></div>
+                        <p class="camera-instruction">Đưa biên nhận vào khung để chụp</p>
+                    </div>
+                </div>
+                <div class="camera-controls">
+                    <button class="btn btn-secondary" id="switchCameraBtn">
+                        <i class="fas fa-camera-rotate"></i>
+                    </button>
+                    <button class="btn btn-primary btn-large" id="captureBtn">
+                        <i class="fas fa-camera"></i>
+                    </button>
+                    <button class="btn btn-secondary" id="toggleFlashBtn">
+                        <i class="fas fa-flashlight"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Withdraw Modal -->
+    <div id="withdrawModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Rút Tiền</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="withdrawForm">
+                    <div class="form-group">
+                        <label for="withdrawAmount">Số tiền muốn rút</label>
+                        <div class="input-group">
+                            <input type="number" id="withdrawAmount" name="withdrawAmount" class="form-control" placeholder="Nhập số tiền" min="50000" max="10000000" step="10000" required>
+                            <span class="input-suffix">VND</span>
+                        </div>
+                        <div class="amount-suggestions">
+                            <button type="button" class="amount-btn" data-amount="500000">500K</button>
+                            <button type="button" class="amount-btn" data-amount="1000000">1M</button>
+                            <button type="button" class="amount-btn" data-amount="2000000">2M</button>
+                            <button type="button" class="amount-btn" data-amount="5000000">5M</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="withdrawBank">Tài khoản nhận</label>
+                        <select id="withdrawBank" name="withdrawBank" class="form-control" required>
+                            <option value="">Chọn tài khoản ngân hàng</option>
+                        </select>
+                    </div>
+
+                    <div class="withdraw-info">
+                        <div class="info-row">
+                            <span class="label">Phí giao dịch:</span>
+                            <span class="value" id="withdrawFee">0 VND</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Số tiền thực nhận:</span>
+                            <span class="value" id="actualAmount">0 VND</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Thời gian xử lý:</span>
+                            <span class="value">1-3 ngày làm việc</span>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success btn-block">
+                            <i class="fas fa-paper-plane"></i> Xác Nhận Rút Tiền
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Overlay -->
+    <div id="overlay" class="overlay"></div>
+
+    <!-- Scripts -->
+    <script src="components/modals.js"></script>
+    <script src="components/forms.js"></script>
+    <script src="components/camera.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/wallet.js"></script>
+    <script src="js/bills.js"></script>
+    <script src="js/receipts.js"></script>
+    <script src="js/profile.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/api.js"></script>
+
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(registrationError => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>

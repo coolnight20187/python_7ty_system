@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7tỷ.vn - Hệ Thống Quản Trị</title>
+    <link rel="icon" href="https://public-frontend-cos.metadl.com/mgx/img/favicon.png" type="image/png">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-spinner"></div>
+        <p>Đang tải hệ thống 7tỷ.vn...</p>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal active">
+        <div class="modal-content login-form">
+            <div class="login-header">
+                <h2><i class="fas fa-bolt"></i> 7tỷ.vn</h2>
+                <p>Hệ Thống Quản Trị</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Tên đăng nhập</label>
+                    <input type="text" id="username" name="username" required placeholder="Nhập tên đăng nhập">
+                </div>
+                <div class="form-group">
+                    <label for="password">Mật khẩu</label>
+                    <input type="password" id="password" name="password" required placeholder="Nhập mật khẩu">
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> Đăng nhập
+                </button>
+                <div id="loginError" class="error-message" style="display: none;"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="app" class="app-container" style="display: none;">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <button id="menuToggle" class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="logo">
+                    <i class="fas fa-bolt"></i>
+                    <span>7tỷ.vn</span>
+                </div>
+            </div>
+            
+            <div class="header-center">
+                <div class="search-box">
+                    <input type="text" id="globalSearch" placeholder="Tìm kiếm toàn hệ thống...">
+                    <button type="button" class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="header-right">
+                <div class="device-toggle">
+                    <button id="deviceToggle" class="device-btn" title="Chuyển đổi giao diện">
+                        <i class="fas fa-desktop"></i>
+                        <span>PC</span>
+                    </button>
+                </div>
+                
+                <div class="notifications">
+                    <button class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-count">3</span>
+                    </button>
+                </div>
+
+                <div class="user-menu">
+                    <button class="user-btn">
+                        <i class="fas fa-user-circle"></i>
+                        <span id="currentUserName">Admin</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="user-dropdown">
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-user"></i> Thông tin cá nhân
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-cog"></i> Cài đặt
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" id="logoutBtn" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-content">
+                <div class="nav-section">
+                    <h3>Quản Lý Chính</h3>
+                    <ul class="nav-menu">
+                        <li class="nav-item active">
+                            <a href="#" data-module="dashboard" class="nav-link">
+                                <i class="fas fa-tachometer-alt"></i>
+                                <span>Tổng Quan</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" data-module="agents" class="nav-link">
+                                <i class="fas fa-store"></i>
+                                <span>Đại Lý</span>
+                                <span class="notification-badge">5</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" data-module="bills" class="nav-link">
+                                <i class="fas fa-file-invoice-dollar"></i>
+                                <span>Hóa Đơn Điện</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" data-module="customers" class="nav-link">
+                                <i class="fas fa-credit-card"></i>
+                                <span>Khách Thẻ</span>
+                                <span class="notification-badge">2</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" data-module="staff" class="nav-link">
+                                <i class="fas fa-users"></i>
+                                <span>Nhân Viên</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Giao Dịch & Báo Cáo</h3>
+                    <ul class="nav-menu">
+                        <li class="nav-item">
+                            <a href="#" data-module="transactions" class="nav-link">
+                                <i class="fas fa-exchange-alt"></i>
+                                <span>Giao Dịch</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" data-module="approvals" class="nav-link">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Phê Duyệt</span>
+                                <span class="notification-badge">8</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" data-module="reports" class="nav-link">
+                                <i class="fas fa-chart-bar"></i>
+                                <span>Báo Cáo</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <h3>Hệ Thống</h3>
+                    <ul class="nav-menu">
+                        <li class="nav-item">
+                            <a href="#" data-module="settings" class="nav-link">
+                                <i class="fas fa-cog"></i>
+                                <span>Cài Đặt</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" data-module="logs" class="nav-link">
+                                <i class="fas fa-history"></i>
+                                <span>Nhật Ký</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
+            <!-- Dashboard Module -->
+            <div id="dashboardModule" class="module active">
+                <div class="module-header">
+                    <h1><i class="fas fa-tachometer-alt"></i> Tổng Quan Hệ Thống</h1>
+                    <div class="module-actions">
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-sync-alt"></i> Làm mới
+                        </button>
+                    </div>
+                </div>
+
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-store"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="totalAgents">0</h3>
+                            <p>Tổng Đại Lý</p>
+                            <span class="stat-change positive">+5 tuần này</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="totalCustomers">0</h3>
+                            <p>Khách Thẻ</p>
+                            <span class="stat-change positive">+12 tuần này</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="totalBills">0</h3>
+                            <p>Hóa Đơn Trong Kho</p>
+                            <span class="stat-change">Cập nhật liên tục</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="totalRevenue">0 VND</h3>
+                            <p>Doanh Thu Tháng</p>
+                            <span class="stat-change positive">+15.2%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-content">
+                    <div class="dashboard-left">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Hoạt Động Gần Đây</h3>
+                            </div>
+                            <div class="card-content">
+                                <div class="activity-list" id="recentActivities">
+                                    <div class="activity-item">
+                                        <div class="activity-icon">
+                                            <i class="fas fa-user-plus"></i>
+                                        </div>
+                                        <div class="activity-content">
+                                            <p><strong>Đại lý mới đăng ký</strong></p>
+                                            <p>Nguyễn Văn A - 0901234567</p>
+                                            <span class="activity-time">5 phút trước</span>
+                                        </div>
+                                    </div>
+                                    <div class="activity-item">
+                                        <div class="activity-icon">
+                                            <i class="fas fa-money-bill"></i>
+                                        </div>
+                                        <div class="activity-content">
+                                            <p><strong>Giao dịch thanh toán</strong></p>
+                                            <p>Hóa đơn 8412345678901 - 2.500.000 VND</p>
+                                            <span class="activity-time">10 phút trước</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-right">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Cần Phê Duyệt</h3>
+                                <span class="badge badge-danger">15</span>
+                            </div>
+                            <div class="card-content">
+                                <div class="pending-list" id="pendingApprovals">
+                                    <div class="pending-item">
+                                        <div class="pending-content">
+                                            <p><strong>Đại lý mới</strong></p>
+                                            <p>Trần Thị B - 0987654321</p>
+                                        </div>
+                                        <button class="btn btn-sm btn-primary">Duyệt</button>
+                                    </div>
+                                    <div class="pending-item">
+                                        <div class="pending-content">
+                                            <p><strong>Nạp tiền</strong></p>
+                                            <p>5.000.000 VND - Đại lý DL001</p>
+                                        </div>
+                                        <button class="btn btn-sm btn-primary">Duyệt</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Agents Module -->
+            <div id="agentsModule" class="module">
+                <div class="module-header">
+                    <h1><i class="fas fa-store"></i> Quản Lý Đại Lý</h1>
+                    <div class="module-actions">
+                        <button class="btn btn-primary" id="addAgentBtn">
+                            <i class="fas fa-plus"></i> Thêm Đại Lý
+                        </button>
+                    </div>
+                </div>
+
+                <div class="module-toolbar">
+                    <div class="toolbar-left">
+                        <div class="search-group">
+                            <input type="text" id="agentSearch" placeholder="Tìm kiếm đại lý...">
+                            <button class="btn btn-secondary">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="toolbar-right">
+                        <button class="btn btn-warning" id="pendingAgentsBtn">
+                            <i class="fas fa-clock"></i> Đợi Phê Duyệt
+                            <span class="notification-badge">5</span>
+                        </button>
+                        <button class="btn btn-info" id="agentListBtn">
+                            <i class="fas fa-list"></i> Danh Sách Đại Lý
+                        </button>
+                        <button class="btn btn-success" id="agentHistoryBtn">
+                            <i class="fas fa-history"></i> Lịch Sử
+                        </button>
+                        <button class="btn btn-secondary" id="exportAgentsBtn">
+                            <i class="fas fa-file-excel"></i> Xuất Excel
+                        </button>
+                    </div>
+                </div>
+
+                <div class="data-table-container">
+                    <table class="data-table" id="agentsTable">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="selectAllAgents"></th>
+                                <th>STT</th>
+                                <th class="sortable" data-sort="category">Phân Loại <i class="fas fa-sort"></i></th>
+                                <th class="sortable" data-sort="name">Tên Đại Lý <i class="fas fa-sort"></i></th>
+                                <th class="sortable" data-sort="agent_id">ID Đại Lý <i class="fas fa-sort"></i></th>
+                                <th class="sortable" data-sort="staff_id">ID Nhân Viên <i class="fas fa-sort"></i></th>
+                                <th class="sortable" data-sort="created_at">Thời Gian <i class="fas fa-sort"></i></th>
+                                <th>Ghi Chú</th>
+                                <th>Thao Tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="agentsTableBody">
+                            <!-- Data will be loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-pagination">
+                    <div class="pagination-info">
+                        Hiển thị <span id="agentsStart">1</span> - <span id="agentsEnd">10</span> của <span id="agentsTotal">0</span> kết quả
+                    </div>
+                    <div class="pagination-controls">
+                        <button class="btn btn-sm btn-secondary" id="agentsPrevBtn">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <div class="pagination-numbers" id="agentsPagination"></div>
+                        <button class="btn btn-sm btn-secondary" id="agentsNextBtn">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bills Module -->
+            <div id="billsModule" class="module">
+                <div class="module-header">
+                    <h1><i class="fas fa-file-invoice-dollar"></i> Quản Lý Hóa Đơn Điện</h1>
+                    <div class="module-actions">
+                        <button class="btn btn-primary" id="bulkLookupBtn">
+                            <i class="fas fa-search-plus"></i> Tra Cứu Hàng Loạt
+                        </button>
+                    </div>
+                </div>
+
+                <div class="module-toolbar">
+                    <div class="toolbar-left">
+                        <div class="search-group">
+                            <input type="text" id="billSearch" placeholder="Tìm kiếm hóa đơn...">
+                            <button class="btn btn-secondary">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>Lọc mệnh giá:</label>
+                            <input type="number" id="minAmount" placeholder="Từ" class="form-control-sm">
+                            <span>-</span>
+                            <input type="number" id="maxAmount" placeholder="Đến" class="form-control-sm">
+                            <button class="btn btn-sm btn-secondary" id="filterAmountBtn">
+                                <i class="fas fa-filter"></i> Lọc
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="toolbar-right">
+                        <button class="btn btn-info" id="warehouseBtn">
+                            <i class="fas fa-warehouse"></i> KHO
+                        </button>
+                        <button class="btn btn-secondary" id="copySelectedBtn">
+                            <i class="fas fa-copy"></i> Sao chép
+                        </button>
+                        <div class="customer-search">
+                            <input type="text" id="customerSearch" placeholder="Tìm KHÁCH THẺ..." list="customerList">
+                            <datalist id="customerList"></datalist>
+                            <button class="btn btn-success" id="exportWarehouseBtn">
+                                <i class="fas fa-sign-out-alt"></i> Xuất KHO
+                            </button>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" id="columnToggle">
+                                <i class="fas fa-columns"></i> Cột hiển thị
+                            </button>
+                            <div class="dropdown-menu" id="columnDropdown">
+                                <!-- Column toggles will be generated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="data-table-container">
+                    <table class="data-table" id="billsTable">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="selectAllBills"></th>
+                                <th>STT</th>
+                                <th class="sortable" data-sort="customer_code">Mã KH <i class="fas fa-sort"></i></th>
+                                <th class="sortable" data-sort="customer_name">Tên KH <i class="fas fa-sort"></i></th>
+                                <th class="sortable" data-sort="address">Địa chỉ <i class="fas fa-sort"></i></th>
+                                <th class="sortable" data-sort="period">Kỳ thanh toán <i class="fas fa-sort"></i></th>
+                                <th class="sortable" data-sort="previous_amount">Tiền kỳ trước <i class="fas fa-sort"></i></th>
+                                <th class="sortable" data-sort="current_amount">Tiền kỳ này <i class="fas fa-sort"></i></th>
+                                <th class="sortable" data-sort="total_amount">Tổng tiền <i class="fas fa-sort"></i></th>
+                                <th class="sortable" data-sort="added_date">Ngày nhập KHO <i class="fas fa-sort"></i></th>
+                                <th>ID Đại Lý nhập KHO</th>
+                                <th>Ngày xuất KHO</th>
+                                <th>ID KHÁCH THẺ</th>
+                                <th>Ảnh Biên Nhận</th>
+                                <th>Ghi chú</th>
+                                <th>Trạng thái</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="billsTableBody">
+                            <!-- Data will be loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Customers Module -->
+            <div id="customersModule" class="module">
+                <div class="module-header">
+                    <h1><i class="fas fa-credit-card"></i> Quản Lý Khách Thẻ</h1>
+                    <div class="module-actions">
+                        <button class="btn btn-primary" id="addCustomerBtn">
+                            <i class="fas fa-plus"></i> Thêm Khách Thẻ
+                        </button>
+                    </div>
+                </div>
+
+                <div class="module-toolbar">
+                    <div class="toolbar-left">
+                        <div class="search-group">
+                            <input type="text" id="customerSearchInput" placeholder="Tìm kiếm khách thẻ...">
+                            <button class="btn btn-secondary">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="toolbar-right">
+                        <button class="btn btn-warning" id="pendingCustomersBtn">
+                            <i class="fas fa-clock"></i> Đợi Phê Duyệt
+                            <span class="notification-badge">2</span>
+                        </button>
+                        <button class="btn btn-info" id="customerListBtn">
+                            <i class="fas fa-users"></i> KHÁCH THẺ
+                        </button>
+                        <button class="btn btn-success" id="cardListBtn">
+                            <i class="fas fa-credit-card"></i> THẺ
+                        </button>
+                        <button class="btn btn-danger" id="nearDueCardsBtn">
+                            <i class="fas fa-exclamation-triangle"></i> THẺ Sát Hạn
+                            <span class="notification-badge">3</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="data-table-container">
+                    <table class="data-table" id="customersTable">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="selectAllCustomers"></th>
+                                <th>STT</th>
+                                <th class="sortable" data-sort="name">Tên KHÁCH THẺ <i class="fas fa-sort"></i></th>
+                                <th class="sortable" data-sort="category">Phân loại <i class="fas fa-sort"></i></th>
+                                <th class="sortable" data-sort="customer_id">ID KHÁCH THẺ <i class="fas fa-sort"></i></th>
+                                <th class="sortable" data-sort="card_number">Số Thẻ <i class="fas fa-sort"></i></th>
+                                <th class="sortable" data-sort="bank_name">Tên Ngân Hàng <i class="fas fa-sort"></i></th>
+                                <th class="sortable" data-sort="statement_date">Ngày Chốt Sao Kê <i class="fas fa-sort"></i></th>
+                                <th class="sortable" data-sort="due_date">Hạng Cuối Thanh Toán <i class="fas fa-sort"></i></th>
+                                <th>Tình trạng Đáo</th>
+                                <th>Ưu đãi</th>
+                                <th class="sortable" data-sort="required_amount">Số tiền cần Đáo <i class="fas fa-sort"></i></th>
+                                <th class="sortable" data-sort="paid_amount">Số tiền đã Đáo <i class="fas fa-sort"></i></th>
+                                <th>Ghi chú</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customersTableBody">
+                            <!-- Data will be loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Other modules will be added here -->
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- Bulk Lookup Modal -->
+    <div id="bulkLookupModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3><i class="fas fa-search-plus"></i> Công Cụ Tra Cứu Hóa Đơn Điện Hàng Loạt</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="bulk-lookup-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="providerSelect">Nhà cung cấp điện:</label>
+                            <select id="providerSelect" class="form-control">
+                                <option value="">Chọn nhà cung cấp...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="useExternalAPI" checked>
+                                Sử dụng API bên ngoài
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="customerCodes">Danh sách mã khách hàng (mỗi mã một dòng):</label>
+                        <textarea id="customerCodes" class="form-control" rows="10" 
+                                  placeholder="Nhập danh sách mã khách hàng, mỗi mã một dòng...&#10;Ví dụ:&#10;8412345678901&#10;8498765432100&#10;8434567890123"></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button class="btn btn-primary" id="startBulkLookup">
+                            <i class="fas fa-search"></i> Bắt Đầu Tra Cứu
+                        </button>
+                        <button class="btn btn-secondary" id="clearBulkForm">
+                            <i class="fas fa-eraser"></i> Xóa Form
+                        </button>
+                    </div>
+                </div>
+
+                <div id="bulkLookupResults" class="bulk-results" style="display: none;">
+                    <div class="results-header">
+                        <h4>Kết Quả Tra Cứu</h4>
+                        <div class="results-stats">
+                            <span class="stat-item">
+                                <strong>Tổng số:</strong> <span id="totalRequested">0</span>
+                            </span>
+                            <span class="stat-item">
+                                <strong>Thành công:</strong> <span id="totalSuccess">0</span>
+                            </span>
+                            <span class="stat-item">
+                                <strong>Thất bại:</strong> <span id="totalFailed">0</span>
+                            </span>
+                            <span class="stat-item">
+                                <strong>Tỷ lệ thành công:</strong> <span id="successRate">0%</span>
+                            </span>
+                        </div>
+                        <div class="results-actions">
+                            <button class="btn btn-success" id="exportResultsBtn">
+                                <i class="fas fa-file-excel"></i> Xuất Excel
+                            </button>
+                            <button class="btn btn-info" id="copyResultsBtn">
+                                <i class="fas fa-copy"></i> Sao Chép
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="results-table-container">
+                        <table class="data-table" id="bulkResultsTable">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Mã KH</th>
+                                    <th>Tên Khách Hàng</th>
+                                    <th>Địa Chỉ</th>
+                                    <th>Tiền Kỳ Trước</th>
+                                    <th>Tiền Kỳ Này</th>
+                                    <th>Tổng Tiền</th>
+                                    <th>Kỳ</th>
+                                    <th>Nhà Cung Cấp</th>
+                                    <th>Trạng Thái</th>
+                                    <th>Nguồn</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bulkResultsTableBody">
+                                <!-- Results will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="bulkLookupProgress" class="progress-container" style="display: none;">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="bulkProgressFill"></div>
+                    </div>
+                    <div class="progress-text">
+                        <span id="bulkProgressText">Đang xử lý...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detail Modal -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3 id="detailModalTitle">Chi Tiết</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="detailModalBody">
+                <!-- Content will be loaded dynamically -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success" id="approveBtn" style="display: none;">
+                    <i class="fas fa-check"></i> Xác Nhận Phê Duyệt
+                </button>
+                <button class="btn btn-warning" id="editBtn" style="display: none;">
+                    <i class="fas fa-edit"></i> Sửa
+                </button>
+                <button class="btn btn-danger" id="cancelBtn" style="display: none;">
+                    <i class="fas fa-times"></i> Hủy
+                </button>
+                <button class="btn btn-secondary" id="closeDetailBtn">
+                    <i class="fas fa-times"></i> Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/modules/dashboard.js"></script>
+    <script src="js/modules/agents.js"></script>
+    <script src="js/modules/bills.js"></script>
+    <script src="js/modules/customers.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

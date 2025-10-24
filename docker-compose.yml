@@ -1,0 +1,117 @@
+# Docker Compose for 7tỷ.vn System - Windows 11 Optimized
+# Complete multi-container setup with FastAPI, PostgreSQL, Redis
+
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: ty7_postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-ty7_db}
+      POSTGRES_USER: ${POSTGRES_USER:-ty7user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ty7password}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --locale=C"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+      - ./database/sample_data.sql:/docker-entrypoint-initdb.d/02-sample_data.sql:ro
+    ports:
+      - "5432:5432"
+    networks:
+      - ty7_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-ty7user} -d ${POSTGRES_DB:-ty7_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: ty7_redis
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-ty7redis}
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - ty7_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-ty7redis}", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+
+  # FastAPI Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ty7_backend
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-ty7user}:${POSTGRES_PASSWORD:-ty7password}@postgres:5432/${POSTGRES_DB:-ty7_db}
+      - REDIS_URL=redis://:${REDIS_PASSWORD:-ty7redis}@redis:6379/0
+      - SECRET_KEY=${SECRET_KEY:-ty7-super-secret-key-2024-production}
+      - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost:8000,http://127.0.0.1:8000}
+      - DEBUG=${DEBUG:-true}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./backend:/app
+      - ./frontend:/app/frontend
+      # Windows-specific volume mounts
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - "8000:8000"
+    networks:
+      - ty7_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    command: >
+      sh -c "
+        echo 'Waiting for database...' &&
+        python -c 'import asyncpg, asyncio; asyncio.run(asyncpg.connect(\"postgresql://${POSTGRES_USER:-ty7user}:${POSTGRES_PASSWORD:-ty7password}@postgres:5432/${POSTGRES_DB:-ty7_db}\"))' &&
+        echo 'Database is ready!' &&
+        uvicorn main:app --host 0.0.0.0 --port 8000 --reload --log-level info
+      "
+
+# Networks
+networks:
+  ty7_network:
+    driver: bridge
+    name: ty7_network
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/16
+
+# Volumes
+volumes:
+  postgres_data:
+    name: ty7_postgres_data
+    driver: local
+  redis_data:
+    name: ty7_redis_data
+    driver: local
+
+# Windows-specific configurations
+x-common-variables: &common-variables
+  COMPOSE_CONVERT_WINDOWS_PATHS: 1
+  DOCKER_BUILDKIT: 1
+  COMPOSE_DOCKER_CLI_BUILD: 1
